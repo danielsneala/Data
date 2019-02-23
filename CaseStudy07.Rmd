@@ -1,0 +1,218 @@
+---
+title: "CaseStudy07"
+author: "ND8"
+date: "February 19, 2019"
+output: 
+    html_document:
+      keep_md: true
+---
+
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)
+library(stringi)
+library(downloader)
+library(pander)
+Ni <- tempfile()
+
+download("http://scriptures.nephi.org/downloads/lds-scriptures.csv.zip", Ni, mode ="wb")
+
+
+Nephi <- read_csv(unzip(Ni))
+
+
+
+Finder <- read_rds(gzcon(url("https://byuistats.github.io/M335/data/BoM_SaviorNames.rds"))) %>%
+  .$name %>%
+  rev()
+
+
+
+Aslan <- Nephi %>%
+  filter(volume_lds_url =="bm") %>%
+  select(volume_lds_url, book_title, scripture_text)
+
+Voice <- Aslan %>%
+  .$scripture_text %>%
+  str_flatten() %>%
+  unlist()
+  
+for(i in seq_along(Finder)){
+  
+  Voice <- str_replace_all(Voice, Finder[i], "NARNIA")
+}
+
+Abe <- str_split(Voice, "NARNIA") %>%
+  unlist()
+
+Writers <- Aslan$book_title %>%
+  unique() %>%
+  str_c("NARNIA2", collapse = "|") 
+
+Abish <- data.frame(scripture_text = Abe) %>% 
+  mutate(Heading = str_extract(words, Writers), 
+         scripture_text = str_remove_all(words, Writers),
+         Heading = str_remove(Heading, "NARNIA2")) %>%
+  mutate(Words = unlist(map(scripture_text, function(x)unname(stri_stats_latex(x)[4])))) 
+  
+  
+
+  
+
+  
+
+Abish %>%
+  summarize(avg = mean(Words))
+  
+
+Plates <- left_join(Abish, Aslan, by = "scripture_text")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
